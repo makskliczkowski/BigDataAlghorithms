@@ -1,0 +1,90 @@
+<html><head>
+<title> LBL-PKT - Hour-long Traces of Wide-Area Traffic
+</title></head><body>
+<!-- @(#) $Header: /home/portnoy/u4/vern/ITA/html/contrib/RCS/LBL-PKT.html,v 1.2 2004/04/18 00:35:10 vern Exp $ (LBL)-->
+<h1>
+<em>LBL-PKT</em>
+</h1>
+<dl>
+<dt>
+<b>Description</b>
+<dd>
+These traces each contain an hour's worth of all wide-area traffic between
+the Lawrence Berkeley Laboratory and the rest of the world.
+<dt>
+<b>Format</b>
+<dd>
+The traces were reduced from
+<a href=ftp://ftp.ee.lbl.gov/tcpdump.tar.Z><em>tcpdump</em></a>
+format to ASCII using the
+<a href=sanitize.html> sanitize</a> scripts.  They include five files:
+<em>lbl-pkt-<b>n</b>.tcp</em> (TCP packets),
+<em>lbl-pkt-<b>n</b>.sf</em> (TCP SYN/FIN/RST packets),
+<em>lbl-pkt-<b>n</b>.udp</em> (UDP packets),
+<em>lbl-pkt-<b>n</b>.encap</em> (encapsulated IP - MBone),
+and <em>lbl-pkt-<b>n</b>.other</em> (whatever else was in the trace).
+<dt>
+<b>Measurement</b>
+<dd>
+The trace <b>lbl-pkt-4</b> ran from 14:00 to 15:00 on Friday,
+January 21, 1994, and <b>lbl-pkt-5</b> ran from 14:00 to 15:00 on
+Friday, January 28, 1994 (times
+are Pacific Standard Time).  Each captured 1.3 million TCP packets, the
+first dropping about 0.0007 of the total, the second about 0.0005.
+The tracing was done on the Ethernet DMZ network over
+which flows all traffic into or out of the Lawrence Berkeley Laboratory,
+located in Berkeley, California.
+The raw traces were made using 
+<a href=ftp://ftp.ee.lbl.gov/tcpdump.tar.Z><em>tcpdump</em></a>
+on a Sun Sparcstation using the
+<a href=ftp://ftp.ee.lbl.gov/papers/bpf-usenix93.ps.Z>BPF</a>
+kernel packet filter.  Timestamps have microsecond precision.
+<dt>
+<b>Privacy</b>
+<dd>
+The traces have been "sanitized" using the
+<a href=sanitize.html> sanitize</a> scripts.  This means that
+the host IP addresses have been renumbered, and all packet contents
+removed.
+<dt>
+<b>Acknowledgements</b>
+<dd>
+The traces were made by Vern Paxson (<em>vern@ee.lbl.gov</em>).
+In publications,
+please include an appropriate citation to the first paper mentioned below.
+<dt>
+<b>Publications</b>
+<dd>
+The traces correspond to <strong>LBL-PKT-4</strong> and
+<strong>LBL-PKT-5</strong> in
+<a href=ftp://ftp.ee.lbl.gov/papers/WAN-poisson.ps.Z> Wide-Area Traffic:
+The Failure of Poisson Modeling</a>, V. Paxson and S. Floyd,
+<em>IEEE/ACM Transactions on Networking</em>, 3(3), pp. 226-244, June 1995.
+<strong>LBL-PKT-4</strong> is also briefly studied in
+<a href=ftp://ftp.ee.lbl.gov/papers/fast-approx-selfsim.ps.Z>
+Fast Approximation of Self-Similar Network Traffic</a>,
+V. Paxson,
+technical report LBL-36750/UC-405, April 1995.
+<dt>
+<b>Related traces</b>
+<dd>
+<a href=LBL-TCP-3.html> LBL-TCP-3 </a>,
+<a href=DEC-PKT.html> DEC-PKT </a>.
+<dt>
+<b>Restrictions</b>
+<dd>
+The traces may be freely redistributed.
+<dt>
+<b>Distribution</b>
+<dd>
+Available from the Archive as
+<a href="ftp://ita.ee.lbl.gov/traces/lbl-pkt-4.tar.Z">
+<b>lbl-pkt-4</b></a>, compressed <em>tar</em> format
+(10 MB; 33 MB uncompressed), and
+<a href="ftp://ita.ee.lbl.gov/traces/lbl-pkt-5.tar.Z">
+<b>lbl-pkt-5</b></a> (9 MB; 30 MB uncompressed).
+</dl>
+<br><br>
+Up to
+<a href=../traces.html> Traces In The Internet Traffic Archive</a>.
+</body></html>

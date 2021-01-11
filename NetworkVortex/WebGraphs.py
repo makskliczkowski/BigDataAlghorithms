@@ -147,7 +147,7 @@ def undirectedCountInAndOut(file):
 
 try:
 
-    undirectedCountInAndOut('web-Stanford.txt')
+    directedCountInAndOut('web-Stanford.txt')
 except ...:
     spark = SparkSession.builder.getOrCreate()
     spark.catalog.clearCache()
