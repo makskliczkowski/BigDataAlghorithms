@@ -402,7 +402,58 @@ object Similarity {
     }
     1.0-(sum.toDouble/hash_num)
   }
+  // approximate similarity test for k-shingles with minihash quick
+  def jaccard_minhash_quicker(f1: String, f2:String, k:Int, hash_num: Int, seeds: Array[Int]) : Double = {
+    val hash_seed = 100
+    // sets for tests
+    var universalSet = scala.collection.mutable.Set[Int]()
+    var set1 = scala.collection.mutable.Set[Int]()
+    var set2 = scala.collection.mutable.Set[Int]()
 
+    // documents as Strings
+    val doc1 = readFileToString(f1)
+    val doc2 = readFileToString(f2)
+    // estimators
+    var estimators_1 = Array.fill(hash_num)(Integer.MAX_VALUE)
+    var estimators_2 = Array.fill(hash_num)(Integer.MAX_VALUE)
+
+    // DOCUMENT 1
+    for(i <- 0 until doc1.length-k){
+      var tempStr = ""
+      for(j <- 0 until k){
+        tempStr += doc1(i+j)
+      }
+      val hashed = MurmurHash3.arrayHash(tempStr.toCharArray,hash_seed)
+      if(!set1.contains(hashed)){
+        set1 += hashed
+        for(j <- 0 until hash_num){
+          val hash_j = MurmurHash3.arrayHash(hashed.toBinaryString.toCharArray,seeds(j)) // modulo with number of elements
+          if(hash_j < estimators_1(j)) estimators_1(j) = hash_j
+        }
+      }
+    }
+    // DOCUMENT 2
+    for(i <- 0 until doc2.length-k){
+      var tempStr = ""
+      for(j <- 0 until k){
+        tempStr += doc2(i+j)
+      }
+      val hashed = MurmurHash3.arrayHash(tempStr.toCharArray,hash_seed)
+      if(!set2.contains(hashed)){
+        set2 += hashed
+        for(j <- 0 until hash_num){
+          val hash_j = MurmurHash3.arrayHash(hashed.toBinaryString.toCharArray,seeds(j)) // modulo with number of elements
+          if(hash_j < estimators_2(j)) estimators_2(j) = hash_j
+        }
+      }
+    }
+    // calculations
+    var sum = 0
+    for(i<-0 until hash_num){
+      sum += convertBoolToInt(estimators_1(i)==estimators_2(i))
+    }
+    1.0-(sum.toDouble/hash_num)
+  }
   def main(args : Array[String]) = {
     // TEST HLL
     /*
@@ -412,15 +463,16 @@ object Similarity {
     println(hll_test.mkString)
     */
     // TEST JACCARD
-    val hashnum = 10
+    val hashnum = 150
     val seeds = Array.fill(hashnum)(scala.util.Random.nextInt)
     val files = getListOfFiles(booksDir).map(_.toString)
     val f1 = files.head
     val second_num = 4//abs(scala.util.Random.nextInt)%files.size
     val f2 = files(second_num)
-    val jaccard_distance_exact = jaccard(f1,f2,3)
-    val jaccard_distance_est = jaccard_minhash(f1,f2,3,hash_num = hashnum,seeds = seeds)
-    println(jaccard_distance_exact, jaccard_distance_est)
+    val jaccard_distance_exact = jaccard(f1,f2,5)
+    val jaccard_distance_est = jaccard_minhash(f1,f2,5,hash_num = hashnum,seeds = seeds)
+    val jaccard_distance_est2 = jaccard_minhash_quicker(f1,f2,5,hashnum,seeds)
+    println(jaccard_distance_exact, jaccard_distance_est,jaccard_distance_est2)
   }
 
 }
