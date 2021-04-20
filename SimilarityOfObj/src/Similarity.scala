@@ -18,7 +18,7 @@ object Similarity {
   //-------------GLOBAL VARIABLES--------------------
   // HYPER_LOG_LOG
   val lbl_tcp_dir = "lbl-pkt-4/lbl-pkt-4.tcp"
-  val seed_hll = 0xf7ca7fd2
+  val seed_hll = scala.util.Random.nextInt
   val min_b = 4
   val alphas: Array[Double] = Array(0.673, 0.697, 0.709) // for first 3 from P. Flajolet
   // READING DOCUMENTS
@@ -70,6 +70,7 @@ object Similarity {
     else{
       hash = MurMurHash3_64(value,seed_hll).toBinaryString
     }
+    // adding zeros at the beginning
     val start_zeros = Array.fill(size - hash.length)('0').mkString
 
     start_zeros + hash
@@ -404,7 +405,7 @@ object Similarity {
   }
   // approximate similarity test for k-shingles with minihash quick
   def jaccard_minhash_quicker(f1: String, f2:String, k:Int, hash_num: Int, seeds: Array[Int]) : Double = {
-    val hash_seed = 100
+    val hash_seed = 100100
     // sets for tests
     var universalSet = scala.collection.mutable.Set[Int]()
     var set1 = scala.collection.mutable.Set[Int]()
@@ -456,23 +457,24 @@ object Similarity {
   }
   def main(args : Array[String]) = {
     // TEST HLL
-    /*
-    val b =7
+
+    val b =5
     val alpha = cal_alpha_m(b)
-    val hll_test = hll_testOnFile(lbl_tcp_dir, b,pow(2,b).toInt,alpha,seed_hll,64,true)
+    val hll_test = hll_testOnFile(lbl_tcp_dir, b,pow(2,b).toInt,alpha,seed_hll,32,false)
     println(hll_test.mkString)
-    */
+
     // TEST JACCARD
-    val hashnum = 150
+    val hashnum = 200
     val seeds = Array.fill(hashnum)(scala.util.Random.nextInt)
     val files = getListOfFiles(booksDir).map(_.toString)
-    val f1 = files.head
-    val second_num = 4//abs(scala.util.Random.nextInt)%files.size
+    val f1 = files(3)
+    val second_num = 5//abs(scala.util.Random.nextInt)%files.size
     val f2 = files(second_num)
+    println("Your books are: "+ f1, f2)
     val jaccard_distance_exact = jaccard(f1,f2,5)
-    val jaccard_distance_est = jaccard_minhash(f1,f2,5,hash_num = hashnum,seeds = seeds)
+    //val jaccard_distance_est = jaccard_minhash(f1,f2,5,hash_num = hashnum,seeds = seeds)
     val jaccard_distance_est2 = jaccard_minhash_quicker(f1,f2,5,hashnum,seeds)
-    println(jaccard_distance_exact, jaccard_distance_est,jaccard_distance_est2)
+    println("Exact J_d = " + jaccard_distance_exact, /*jaccard_distance_est,*/"Minhash J_d = " + jaccard_distance_est2)
   }
 
 }
